@@ -1,0 +1,1057 @@
+@if (session()->has('username'))
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Create Sale</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <!-- End fonts -->
+
+    <!-- core:css -->
+    <link rel="stylesheet" href="{{ asset('public/vendors/core/core.css') }}">
+    <link rel="stylesheet" href="{{ asset('public/vendors/flatpickr/flatpickr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('public/fonts/feather-font/css/iconfont.css') }}">
+    <link rel="stylesheet" href="{{ asset('public/vendors/flag-icon-css/css/flag-icon.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('public/css/style.css?v=0.02') }}">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="{{ asset('public/images/logo/fav-icon.png') }}" />
+
+</head>
+<style>
+    .btn-add {
+        background-color: blueviolet;
+        font-size: 18px;
+        color: white;
+        width: 30px;
+        text-align: center;
+        margin-top: 7px;
+        margin-left: 5px;
+        padding: none;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .btn-add:hover {
+        cursor: pointer;
+    }
+
+    .form-section {
+        margin-bottom: 1rem;
+    }
+
+
+
+    .btn-remove:hover {
+        background-color: darkred;
+    }
+</style>
+
+<body class="sales-body-color">
+
+    <div class="main-wrapper">
+
+        <!-- partial:partials/_sidebar.html -->
+        @extends('layouts.side_bar')
+
+        <div class="page-wrapper">
+
+            <!-- partial:partials/_navbar.html -->
+            @include('layouts.navbar')
+            <!-- Nav-Bar End -->
+
+            <!-- Main Content Start -->
+            <div class="page-content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="pb-5">
+                                <label for="saleType" class="form-label fs-4 fw-bold">Select Sale Type</label>
+                                <select name="saleType" id="saleType" class="form-select" onchange="viewMainForm()">
+                                    @if (session()->has('followupData') && session('followupData'))
+                                    @if (session('followupData')->Business_Name !== null)
+                                    <option value="Business" selected>Business</option>
+                                    <option value="Consumer">Consumer</option>
+                                    @else
+                                    <option value="Business">Business</option>
+                                    <option value="Consumer" selected>Consumer</option>
+                                    @endif
+                                    @else
+                                    <option value="" disabled selected>Sale Type</option>
+                                    <option value="Business">Business</option>
+                                    <option value="Consumer">Consumer</option>
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <style>
+                    .red-star{
+                        color:red;
+                        padding: 2px;
+                    }
+                </style>
+                <!-- Main Content End -->
+                <div style="display: none" id="main-form" class="containers" style="border: 1px solid black; background-color: #73C9FF1F;">
+                    <div class="main-content" style="padding: 10px">
+                        <form action="{{ route('create-sale') }}" method="POST" id="myForm">
+                            @csrf
+                            <!--Form Box-->
+                            <div class="form-box" style="background-color: #CEEBFF;padding: 10px; margin: 15px;border-radius: 15px;">
+                                <!--Business Details-->
+                                <div class="form-cards" style=" margin: 20px 15px; padding: 20px; " style="display: none" id="business-section">
+                                 <div style="margin-bottom: 20px;">    
+                                   <h3>Business Details</h3>
+                                 </div>
+                                <div class="row g-2 g-lg-3">
+                                        <div class="col-md-8">
+                                            <label for="inputPassword5" class="form-label">Company Name <span class="red-star">*</span></label>
+                                            <input type="text" class="form-control" aria-describedby="passwordHelpBlock" name="businessname" id="companyName" />
+                                        </div>
+                                        <div class=" col-md-4">
+                                            <label for="inputPassword5" class="form-label">Company Reg. No.</label>
+                                            <input type="text" class="form-control" aria-describedby="passwordHelpBlock" name="comp_reg_no" id="companyRegNo" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row g-2 g-lg-3 my-1">
+                                        <div class="col-md-3">
+                                            <label for="inputPassword5" class="form-label">Company Type  <span class="red-star">*</span></label>
+                                            <select class="form-select" aria-label="Default select example" name="businesstype">
+                                                <option selected disabled>Select</option>
+                                                <option value="Sole Trader">Sole Trader</option>
+                                                <option value="Partnership">Partnership</option>
+                                                <option value="Limited Company">Limited Company</option>
+                                                <option value="Others">Others</option>
+                                            </select>
+                                        </div>
+                                        <div class=" col-md-3">
+                                            <label for="inputPassword5" class="form-label">Company Category</label>
+                                            <select class="form-select" aria-label="Default select example" name="businesscategory">
+                                            <option selected disabled>Select</option>
+                                                <option value="Bakery">Bakery</option>
+                                                <option value="Electricians">Electricians</option>
+                                                <option value="Builders">Builders</option>
+                                                <option value="Dentists">Dentists</option>
+                                                <option value="Taxi Servie">Taxi Servie</option>
+                                                <option value="Cafe">Cafe</option>
+                                                <option value="Plumbing & Heating">Plumbing & Heating</option>
+                                                <option value="Restaurant">Restaurant</option>
+                                                <option value="Doors and Widnows">Doors and Widnows</option>
+                                                <option value="Plumbing and Heating">Plumbing and Heating</option>
+                                                <option value="Repair Service">Repair Service</option>
+                                                <option value="Travellers">Travellers</option>
+                                                <option value="Holiday Accommodation and Parks">Holiday Accommodation and Parks</option>
+                                                <option value="Event Management">Event Management</option>
+                                                <option value="English Restaurants">English Restaurants</option>
+                                                <option value="Cafes and Coffee Shops">Cafes and Coffee Shops
+                                                </option>
+                                                <option value="Locksmiths">Locksmiths</option>
+                                                <option value="Self Catering Holiday Accommodation">Self Catering
+                                                    Holiday Accommodation</option>
+                                                <option value="Taxis and Private Hire Vehicles">Taxis and Private
+                                                    Hire
+                                                    Vehicles</option>
+                                                <option value="Florists">Florists</option>
+                                                <option value="Chauffeur Services">Chauffeur Services</option>
+                                                <option value="Bakeries">Bakeries</option>
+                                                <option value="Chauffeur Driven Car Hire">Chauffeur Driven Car Hire
+                                                </option>
+                                                <option value="Granite Suppliers">Granite Suppliers</option>
+                                                <option value="Travel Agents & Services">Travel Agents & Services
+                                                </option>
+                                                <option value="Headstones">Headstones</option>
+                                                <option value="Plumbers">Plumbers</option>
+                                                <option value="Commercial Flooring">Commercial Flooring</option>
+                                                <option value="Kitchen Tiling">Kitchen Tiling</option>
+                                                <option value="Tilers">Tilers</option>
+                                                <option value="Coffee Machines and Supplies">Coffee Machines and
+                                                    Supplies</option>
+                                                <option value="Monumental Masons and Memorials">Monumental Masons
+                                                    and
+                                                    Memorials</option>
+                                                <option value="Italian Restaurants">Italian Restaurants</option>
+                                                <option value="Fireplaces">Fireplaces</option>
+                                                <option value="Indian Restaurants">Indian Restaurants</option>
+                                                <option value="Pub Restaurants">Pub Restaurants</option>
+                                                <option value="Floor Sanding and Polishing">Floor Sanding and
+                                                    Polishing
+                                                </option>
+                                                <option value="Fish and Chip Shops and Restaurants">Fish and Chip
+                                                    Shops
+                                                    and Restaurants</option>
+                                                <option value="Airport Transfers">Airport Transfers</option>
+                                                <option value="Painters and Decorators">Painters and Decorators
+                                                </option>
+                                                <option value="Tile Suppliers">Tile Suppliers</option>
+                                                <option value="Steakhouse Restaurants">Steakhouse Restaurants
+                                                </option>
+                                                <option value="Welders">Welders</option>
+                                                <option value="Party & Event Planning">Party & Event Planning
+                                                </option>
+                                                <option value="Flooring Services">Flooring Services</option>
+                                                <option value="MiniBus Hire">MiniBus Hire</option>
+                                                <option value="Chinese Restaurants">Chinese Restaurants</option>
+                                                <option value="Nepalese Restaurants">Nepalese Restaurants</option>
+                                                <option value="Coach Hire">Coach Hire</option>
+                                                <option value="Carpet Shops">Carpet Shops</option>
+                                                <option value="Gas Fires">Gas Fires</option>
+                                                <option value="Caribbean Restaurants">Caribbean Restaurants
+                                                </option>
+                                                <option value="Thai Restaurants">Thai Restaurants</option>
+                                                <option value="Handyman Services">Handyman Services</option>
+                                                <option value="Landscapers">Landscapers</option>
+                                                <option value="Pizza Delivery and Takeaway">Pizza Delivery and
+                                                    Takeaway
+                                                </option>
+                                                <option value="Fishing Lake">Fishing Lake</option>
+                                                <option value="DJs">DJs</option>
+                                                <option value="Pubs">Pubs</option>
+                                                <option value="Dentures">Dentures</option>
+                                                <option value="Bathroom Design and Installation">Bathroom Design
+                                                    and
+                                                    Installation</option>
+                                                <option value="Cosmetic Dentistry">Cosmetic Dentistry</option>
+                                                <option value="Granite Worktops">Granite Worktops</option>
+                                                <option value="Coach Holidays">Coach Holidays</option>
+                                                <option value="Holiday Cottages">Holiday Cottages</option>
+                                                <option value="Laminate Floor Fitters">Laminate Floor Fitters
+                                                </option>
+                                                <option value="Caravan Parks">Caravan Parks</option>
+                                                <option value="Hotels">Hotels</option>
+                                                <option value="Static Caravan Parks">Static Caravan Parks</option>
+                                                <option value="Mini Buses">Mini Buses</option>
+                                                <option value="Patio Cleaning">Patio Cleaning</option>
+                                                <option value="Hotel Restaurants">Hotel Restaurants</option>
+                                                <option value="Tea and Coffee Specialist Shops">Tea and Coffee
+                                                    Specialist Shops</option>
+                                                <option value="Partitioning Services and Equipment">Partitioning
+                                                    Services and Equipment</option>
+                                                <option value="Greek Restaurants">Greek Restaurants</option>
+                                                <option value="Tapas Restaurants">Tapas Restaurants</option>
+                                                <option value="Soft Drink Suppliers">Soft Drink Suppliers</option>
+                                                <option value="Tours and Sightseeing">Tours and Sightseeing
+                                                </option>
+                                                <option value="Traditional Restaurants">Traditional Restaurants
+                                                </option>
+                                                <option value="Video to DVD Transfer">Video to DVD Transfer
+                                                </option>
+                                                <option value="Paving and Driveways">Paving and Driveways</option>
+                                                <option value="Takeaway Food">Takeaway Food</option>
+                                                <option value="Function Rooms and Banqueting">Function Rooms and
+                                                    Banqueting</option>
+                                                <option value="Carpet and Upholstery Cleaners">Carpet and
+                                                    Upholstery
+                                                    Cleaners</option>
+                                                <option value="Underfloor Heating">Underfloor Heating</option>
+                                                <option value="Marble Services">Marble Services</option>
+                                                <option value="Tourist Attractions">Tourist Attractions</option>
+                                                <option value="Antique Restoration">Antique Restoration</option>
+                                                <option value="Chinese Takeaways">Chinese Takeaways</option>
+                                                <option value="Pizzerias">Pizzerias</option>
+                                                <option value="Mediterranean Restaurants">Mediterranean Restaurants
+                                                </option>
+                                                <option value="Orthodontists">Orthodontists</option>
+                                                <option value="Wedding Flowers">Wedding Flowers</option>
+                                                <option value="Worktops">Worktops</option>
+                                                <option value="Party Venues">Party Venues</option>
+                                                <option value="Camp Sites">Camp Sites</option>
+                                                <option value="Wedding Cakes">Wedding Cakes</option>
+                                                <option value="Quarries">Quarries</option>
+                                                <option value="Seafood Restaurants">Seafood Restaurants</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class=" col-md-6">
+                                            <label for="inputPassword5" class="form-label">Website</label>
+                                            <input type="text" class="form-control" name="businesswebsite"  />
+                                        </div>
+                                    </div>
+
+                                    <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3 my-1">
+                                        <div class="col-md-3">
+                                            <label for="inputPassword5" class="form-label">Address Line 1  <span class="red-star">*</span></label>
+                                            <input type="text" class="form-control" name="business_address1" id="addressLine" />
+                                        </div>
+                                        <div class=" col-md-3">
+                                            <label for="inputPassword5" class="form-label">Address Line 2</label>
+                                            <input type="text" class="form-control" name="business_address2" />
+                                        </div>
+                                        <div class=" col-md-2">
+                                            <label for="inputPassword5" class="form-label">City  <span class="red-star">*</span></label>
+                                            <input type="text" class="form-control" name="businesscity"  id="city"/>
+                                        </div>
+                                        <div class=" col-md-2">
+                                            <label for="inputPassword5" class="form-label">State</label>
+                                            <input type="text" class="form-control" name="business_state" />
+                                        </div>
+                                        <div class=" col-md-2">
+                                            <label for="inputPassword5" class="form-label">Postal Code  <span class="red-star">*</span></label>
+                                            <input type="text" class="form-control" name="businesspostcode" id="postcode"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                        <!--AUTHORISED-->
+                               <!-- The parent container where new sections will be added -->
+                                <div>
+                                <div id="auth-persons-container">
+                                <!-- Existing Authorized Person Form Section (Hidden initially) -->
+                                <div class="form-cards" style="margin: 0px 15px; margin-top: 20px; padding: 20px;" id="auth-person-container">
+                                    <div style="margin-bottom: 20px;">    
+                                    <h3>Authorized Person Details</h3>
+                                    </div>
+                                    <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
+                                    <div class="col-md-2">
+                                        <label for="inputPassword5" class="form-label">Title  <span class="red-star">*</span></label>
+                                        <select class="form-select" aria-label="Default select example" name="title[]" id="auth_title">
+                                        <option selected disabled>Select</option>
+                                        <option value="Mr">Mr.</option>
+                                        <option value="Mrs">Mrs.</option>
+                                        <option value="Ms">Ms.</option>
+                                        <option value="Dr">Dr.</option>
+                                        <option value="Prof">Prof.</option>
+                                        </select>
+                                    </div>
+                                    <div class=" col-md-4">
+                                        <label for="inputPassword5" class="form-label">First Name  <span class="red-star">*</span></label>
+                                        <input type="text" class="form-control" name="authfirstname[]" id ="authfirstname" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="inputPassword5" class="form-label">Middle Name</label>
+                                        <input type="text" class="form-control" name="authmiddlename[]" />
+                                    </div>
+                                    <div class=" col-md-3">
+                                        <label for="inputPassword5" class="form-label">Last name  <span class="red-star">*</span></label>
+                                        <input type="text" class="form-control" name="authlastname[]" id ="authlastname" />
+                                    </div>
+                                    </div>
+
+                                    <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3 my-1">
+                                    <div class="col-md-3">
+                                        <label for="inputPassword5" class="form-label">Date Of Birth</label>
+                                        <input type="date" class="form-control" name="authdob[]" />
+                                    </div>
+                                    <div class=" col-md-3">
+                                        <label for="inputPassword5" class="form-label">Gender</label>
+                                        <select class="form-select" aria-label="Default select example" name="authgender[]">
+                                        <option selected disabled>Select</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                    </div>
+
+                                    <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3 my-1">
+                                    <div class="col-md-3">
+                                        <label for="inputPassword5" class="form-label">Address Line 1 <span class="red-star">*</span></label>
+                                        <input type="text" class="form-control" name="authaddress1[]" id ="authaddress1" />
+                                    </div>
+                                    <div class=" col-md-3">
+                                        <label for="inputPassword5" class="form-label">Address Line 2</label>
+                                        <input type="text" class="form-control" name="authaddress2[]" />
+                                    </div>
+                                    <div class=" col-md-2">
+                                        <label for="inputPassword5" class="form-label">City <span class="red-star">*</span></label>
+                                        <input type="text" class="form-control" name="authcity[]" id ="auth_city" />
+                                    </div>
+                                    <div class=" col-md-2">
+                                        <label for="inputPassword5" class="form-label">State</label>
+                                        <input type="text" class="form-control" name="authstate[]" />
+                                    </div>
+                                    <div class=" col-md-2">
+                                        <label for="inputPassword5" class="form-label">Postal Code <span class="red-star">*</span></label>
+                                        <input type="text" class="form-control" name="authpostcode[]" id ="auth_postcode" />
+                                    </div>
+                                    </div>
+
+                                    <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3 my-1">
+                                    <div class="col-md-3">
+                                        <label for="authprimary_phone" class="form-label">Primary Phone</label>
+                                        <input type="tel" name="authprimary_phone[]" id="authprimary_phone" id ="authprimary_phone" class="form-control" pattern="[1-3][0-9]{9}">
+                                        <span class="text-danger" id="businessPhoneErr"></span>
+                                    </div>
+                                    <div class=" col-md-3">
+                                        <label for="authsecondary_phone" class="form-label">Secondary Phone</label>
+                                        <input type="text" class="form-control" name="authsecondary_phone[]" />
+                                    </div>
+                                    <div class=" col-md-3">
+                                        <label for="inputPassword5" class="form-label">Primary Mobile</label>
+                                        <input type="text" class="form-control" name="authprimary_mobile[]" />
+                                    </div>
+                                    <div class=" col-md-3">
+                                        <label for="inputPassword5" class="form-label">Secondary Mobile</label>
+                                        <input type="text" class="form-control" name="authsecondary_mobile[]" />
+                                    </div>
+                                    </div>
+
+                                    <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3 my-1">
+                                    <div class="col-md-6">
+                                        <label for="authprimaryemail" class="form-label">Primary Email</label>
+                                        <input type="email" class="form-control" name="authprimaryemail[]" id="authprimaryemail" />
+                                        <span class="text-danger" id="businessEmailErr"></span>
+                                    </div>
+                                    <div class=" col-md-6">
+                                        <label for="authsecondryemail" class="form-label">Secondary Email</label>
+                                        <input type="email" class="form-control" name="authsecondryemail[]" />
+                                    </div>
+                                    </div>
+                                    
+                                </div>
+                                </div>
+                                    <div style="display: flex; align-items: center; justify-content: start; text-align: center; margin-left: 30px; margin-bottom: 20px;">
+                                      <button class="add-more-btn1 btn-add" name="add-authorised" type="button"> + </button>
+                                    </div>
+                                </div>
+
+                                <!--Current Service Details-->
+                                <div class="form-cards" style=" margin: 0px 15px; padding: 20px; ">
+                                    <div style="margin-bottom: 20px;">    
+                                      <h3>Current Service Details</h3>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <label for="inputPassword5" class="form-label">Current Provider Name</label>
+                                             <select class="form-select" aria-label="Default select example" name="currentProvider" >
+                                             <option selected disabled>Select</option>
+                                                <option value="BT">BT</option>
+                                                <option value="Talk Talk">Talk Talk</option>
+                                                <option value="i-Talk">i-Talk</option>
+                                                <option value="Octopus">Octopus</option>
+                                                <option value="Shell Energy">Shell Energy</option>
+                                                <option value="Vodafone">Vodafone</option>
+                                                <option value="Post Office">Post Office</option>
+                                                <option value="Imperial Telecom">Imperial Telecom</option>
+                                                <option value="EON">EON</option>
+                                                <option value="OVO">OVO</option>
+                                                <option value="Origin">Origin</option>
+                                                <option value="Expert Telecom">Expert Telecom</option>
+                                                <option value="Transparent Telecom">Transparent Telecom</option>
+                                                <option value="Plusnet">Plusnet</option>
+                                                <option value="EE">EE</option>
+                                                <option value="Direct Save">Direct Save</option>
+                                                <option value="Utility Warehouse">Utility Warehouse</option>
+                                                <option value="OneStream">OneStream</option>
+                                                <option value="Money Saver">Money Saver</option>
+                                                <option value="Virgin Media">Virgin Media</option>
+                                                <option value="Sky">Sky</option>
+                                                <option value="V4">V4</option>
+                                                <option value="Inspire Telecom">Inspire Telecom</option>
+                                                <option value="Daisy">Daisy</option>
+                                                <option value="One Bill">One Bill</option>
+                                                <option value="XLN">XLN</option>
+                                                <option value="Clear Business">Clear Business</option>
+                                                <option value="Southern Electric">Southern Electric</option>
+                                                <option value="Unicom">Unicom</option>
+                                                <option value="Microtalk">Microtalk</option>
+
+                                             </select>
+                                        </div>
+                                        <div class=" col-md-5">
+                                            <label class="form-label">Current Services</label>
+                                            <input type="text" class="form-control" name="current_services" id ="current_services">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label">Current Bill Per Month</label>
+                                            <input type="text" class="form-control" name="current-bill" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-cards" style=" margin: 20px 15px; padding: 20px 20px 0px 20px;">
+                                    <div id="form-container" class="offer-package-details-container">
+                                        <!-- Original Offer Package Details -->
+                                        <div id="offerPackageDetail" class="offer-package-details">
+                                            <div style="margin-bottom: 20px;">
+                                                <h3>Offer Package Details</h3>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <label for="cli" class="form-label">CLI<span class="red-star">*</span></label>
+                                                    <input type="text" id="cli" class="form-control" name="another_cli[]"/>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <label for="siteDetail" class="form-label">Site Detail<span class="red-star">*</span></label>
+                                                    <input type="text" id="siteDetail" class="form-control" name="site_address[]"  />
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-md-6">
+                                                    <label for="packageOffered" class="form-label">Package Offered<span class="red-star">*</span></label>
+                                                    <select id="packageOffered" class="form-select" name="plan_name[]" >
+                                                        <option selected disabled>Select</option>
+                                                        @foreach ($allpackages as $packagedata)
+                                                            <option value="{{ $packagedata->package_name }}" data-cost="{{ $packagedata->cost }}" data-vat="{{ $packagedata->vat }}" data-inclvat="{{ $packagedata->incl_vat }}">
+                                                                {{ $packagedata->package_name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label for="packageCost" class="form-label">Cost<span class="red-star">*</span></label>
+                                                    <input type="text" id="packageCost" class="form-control" name="plan_cost[]"/>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label for="packageVAT" class="form-label">VAT<span class="red-star">*</span></label>
+                                                    <input type="text" id="packageVAT" class="form-control" name="vat[]"  />
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label for="packageIncludingVAT" class="form-label">Including VAT<span class="red-star">*</span></label>
+                                                    <input type="text" id="packageIncludingVAT" class="form-control" name="including_vat[]" />
+                                                </div>
+                                            </div>
+
+                                            <script>
+                                                document.addEventListener('DOMContentLoaded', () => {
+                                                    const packageSelect = document.getElementById('packageOffered');
+                                                    const costInput = document.getElementById('packageCost');
+                                                    const vatInput = document.getElementById('packageVAT');
+                                                    const inclVATInput = document.getElementById('packageIncludingVAT');
+                                            
+                                                    packageSelect.addEventListener('change', (e) => {
+                                                        const selectedOption = e.target.selectedOptions[0];
+                                            
+                                                        // Get data attributes from the selected option
+                                                        const cost = selectedOption.getAttribute('data-cost') || '';
+                                                        const vat = selectedOption.getAttribute('data-vat') || '';
+                                                        const inclVat = selectedOption.getAttribute('data-inclvat') || '';
+                                            
+                                                        // Populate the input fields
+                                                        costInput.value = cost;
+                                                        vatInput.value = vat;
+                                                        inclVATInput.value = inclVat;
+                                                    });
+                                                });
+                                            </script>
+
+                                            <!-- Add more rows dynamically (example for Calling Features) -->
+                                            <div class="callingFeaturesContainer">
+                                                <div class="row mt-3">
+                                                    <div class="col-md-6">
+                                                        <label for="callingFeatures" class="form-label">Calling Features</label>
+                                                        <select class="form-select" name="callingFeatures[]">
+                                                            <option selected disabled>Select</option>
+                                                            @foreach ($allcallingfeatures as $callingfeatures)
+                                                                <option value="{{ $callingfeatures->callingfeature_name }}" data-cost="{{ $callingfeatures->cost }}" data-vat="{{ $callingfeatures->vat }}" data-inclvat="{{ $callingfeatures->incl_vat }}">
+                                                                    {{ $callingfeatures->callingfeature_name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label for="callingFeaturesCost" class="form-label">Cost</label>
+                                                        <input type="text" class="form-control" name="callingFeaturesCost[]" />
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label for="callingFeaturesVAT" class="form-label">VAT</label>
+                                                        <input type="text" class="form-control" name="callingFeaturesVAT[]" />
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label for="callingFeaturesIncludingVAT" class="form-label">Including VAT</label>
+                                                        <input type="text" class="form-control" name="callingFeaturesIncludingVAT[]" />
+                                                    </div>
+                                                </div>
+                                                <button class="add-more-btn1 btn-add" type="button"> + </button>
+                                            </div>
+                                            
+                                            <!-- Add Ons Section -->
+                                            <div class="addOnsContainer">
+                                                <div class="row mt-3">
+                                                    <div class="col-md-6">
+                                                        <label for="addOns" class="form-label">Add Ons</label>
+                                                        <select id="addOns" class="form-select" name="add_ons[]">
+                                                            <option selected disabled>Select</option>
+                                                            @foreach ($alladdons as $addon)
+                                                                <option value="{{ $addon->addon_name }}" data-cost="{{ $addon->cost }}" data-vat="{{ $addon->vat }}" data-inclvat="{{ $addon->incl_vat }}">
+                                                                    {{ $addon->addon_name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label for="addOnsCost" class="form-label">Cost</label>
+                                                        <input type="text" id="addOnsCost" class="form-control" name="addonscost[]" />
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label for="addOnsVAT" class="form-label">VAT</label>
+                                                        <input type="text" id="addOnsVAT" class="form-control" name="addonsvat[]" />
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label for="addOnsIncludingVAT" class="form-label">Including VAT</label>
+                                                        <input type="text" id="addOnsIncludingVAT" class="form-control" name="addonsincludingvat[]" />
+                                                    </div>
+                                                </div>
+                                                <button class="add-more-btn2 btn-add" type="button"> + </button>
+                                            </div>
+
+                                            <!-- Product Service Charges Section -->
+                                            <div class="oneOffContainer">
+                                                <div style="margin-top: 20px;">
+                                                    <h3>One Off Charges</h3>
+                                                </div>
+                                                <div class="row mt-2">
+                                                    <div class="col-md-6">
+                                                        <label for="productService" class="form-label">Hardware</label>
+                                                        <select id="productService" class="form-select" name="product_services[]">
+                                                        <option selected disabled>Select</option>
+                                                        @foreach ($allhardwares as $hardware)
+                                                            <option value="{{ $hardware->hardware_name }}" data-cost="{{ $hardware->cost }}" data-vat="{{ $hardware->vat }}" data-inclvat="{{ $hardware->incl_vat }}">
+                                                                {{ $hardware->hardware_name }}
+                                                            </option>
+                                                        @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label for="productServiceCost" class="form-label">Cost</label>
+                                                        <input type="text" id="productServiceCost" class="form-control" name="productservicecost[]" />
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label for="productServiceVAT" class="form-label">VAT</label>
+                                                        <input type="text" id="productServiceVAT" class="form-control" name="productservicevat[]" />
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label for="productServiceIncludingVAT" class="form-label">Including VAT</label>
+                                                        <input type="text" id="productServiceIncludingVAT" class="form-control" name="productserviceincludingvat[]" />
+                                                    </div>
+                                                </div>
+                                                <button class="add-more-btn3 btn-add" type="button"> + </button>
+                                            </div>
+                                        </div>
+                                        <!-- Product Service Charges Section Ends-->
+
+                                        <div class="row mt-3">
+                                            <div class="col-md-4 form-section">
+                                                <label for="contractDuration" class="form-label">Contract Duration<span class="red-star">*</span></label>
+                                                <select class="form-select" aria-label="Default select example" name="contractProvider" id="contractProvider">
+                                                <option selected disabled>Select</option>
+                                                    <option value="12 Months">12 Months</option>
+                                                    <option value="24 Months">24 Months</option>
+                                                    <option value="36 Months">36 Months</option>
+                                                    <option value="48 Months">48 Months</option>
+                                                    <option value="60 Months">60 Months</option>
+                                                    <option value="60+">60+</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Add CLI Button -->
+                                <div style="display: flex; justify-content: flex-end; align-items: center; margin: 10px 20px;">
+                                    <button id="add-main-btn" name="add-cli" type="button"
+                                        style="background-color: blueviolet; font-size:18px; color: white; border-radius: 10px; font-weight: 600; text-align: center; padding: 5px 10px;">+ADD
+                                        CLI</button>
+                                </div>
+                            </div>
+
+                            <!--Package Summery-->
+                            <div class="payment-summery-top"
+                                style="background-color: #85CCFF; padding: 15px; padding-bottom: 40px; margin: 15px; border-radius: 15px;">
+                                <h2 style="text-align: center; margin: 15px 0; font-weight: 600;">Package Summery</h2>
+                                <div style="margin-bottom: 20px;">
+                                    <div
+                                        style="display: flex; justify-content: space-between; background-color: white; border-radius: 10px; padding: 20px 90px;">
+                                        <div class="left-content" style="display: flex; align-items: center;">
+                                            <h2>Sparta Extreme Hub</h2>
+                                        </div>
+
+                                        <div class="right-content" style="display: flex; flex-direction: column; gap: 10px;">
+                                            <div style="display: flex; gap: 10px; text-align: right; justify-content: flex-end;">
+                                                <span style="font-size: 20px; font-weight: 600;">Phone Line</span>
+                                                <img src="{{ asset('public/icon_img/telephone.png') }}" alt="Telephone" width="30px">
+                                            </div>
+
+                                            <div style="display: flex; gap: 10px; text-align: right; justify-content: flex-end; align-items: center;">
+                                                <div style="display:flex; gap: 5px; text-align: right; justify-content: flex-end; align-items: center;">
+                                                    <img src="{{ asset('public/icon_img/top.png') }}" alt="Uploadspeed" width="30px">
+                                                    <div style="display: flex; flex-direction: column; text-align: left; line-height: 1;">
+                                                        <span style="font-size: 12px;">Upto</span>
+                                                        <span style="font-size: 20px; font-weight: 600;">20 mbps</span>
+                                                    </div>
+                                                </div>
+
+                                                <div style="display:flex; gap: 5px; text-align: right; justify-content: flex-end; align-items: center;">
+                                                    <img src="{{ asset('public/icon_img/down.png') }}" alt="Downloadspeed" width="30px">
+                                                    <div style="display: flex; flex-direction: column; text-align: left; line-height: 1;">
+                                                        <span style="font-size: 12px;">Upto</span>
+                                                        <span style="font-size: 20px; font-weight: 600;">80 mbps</span>
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <div>
+                                                        <img src="{{ asset('public/icon_img/internet.png') }}" alt="Internet" width="30px">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style="display: flex; gap: 10px; text-align: right; justify-content: flex-end;">
+                                                <span style="font-size: 20px; font-weight: 600;">Free Performance Router</span>
+                                                <img src="{{ asset('public/icon_img/router.png') }}" alt="Router" width="30px">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Payment-Summery-->
+                                <div class="payment-summery-body" style="background-color: white; padding: 15px; border-radius: 15px;">
+                                    <div style="display: flex; justify-content: space-around; font-size: 22px;">
+                                        <h4 style="width: 33.3%; padding-left: 80px; padding-top: 10px;">Service</h4>
+                                        <h4 style="width: 33.3%; text-align: right; padding-right: 30px;  padding-top: 10px;">One-Off</h4>
+                                        <h4 style="width: 33.3%; text-align: right; padding-right: 75px; padding-top: 10px;">Monthly</h4>
+                                    </div>
+                                    <hr style="margin: 10px;">
+
+                                    <div style="display: flex; justify-content: space-around; padding: 0px 25px;">
+                                        <div style="display: flex; flex-direction: column; text-align: left; font-size: 20px; line-height: 1.8;">
+                                            <span>Connectivity</span>
+                                            <span>Add-Ons</span>
+                                            <span>Calling Features</span>
+                                            <span>Router & Delivery Charges</span>
+
+                                        </div>
+                                        <div style="display: flex; flex-direction: column; text-align: right; font-size: 20px; line-height: 1.8;">
+                                            <span>-</span>
+                                            <span>-</span>
+                                            <span>-</span>
+                                            <span>Router & Delivery Charges</span>
+                                        </div>
+                                        <div
+                                            style="display: flex; flex-direction: column; text-align: right; font-size: 20px; line-height: 1.8; width: 20%;">
+                                            <span>£19.99</span>
+                                            <span>£10.00</span>
+                                            <span>£3.00</span>
+                                            <span>-</span>
+                                        </div>
+                                    </div>
+                                    <hr style="margin: 10px;">
+                                    <div style="display: flex; justify-content: space-around; ">
+                                        <div style="display: flex; flex-direction: column; padding-top: 10px; padding-left: 75px; width: 33.3%; ">
+                                            <h4 style="font-size: 30px;">Total</h4>
+                                        </div>
+                                        <div style="display: flex; flex-direction: column; text-align: right; padding-right: 30px;  width: 33.3%;">
+                                            <h4 style="font-size: 30px;">£10.00</h4>
+                                            <div style="line-height: 0; text-align: right;">
+                                                <h4 style="font-size: 30px;">£10.00</h4>
+                                                <span style="font-size: 12px; font-weight: bold;">Inc VAT</span>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; flex-direction: column; text-align: right; padding-right: 75px; width: 33.3%;">
+                                            <h4 style="font-size: 30px;">£32.99</h4>
+                                            <div style="line-height: 0; text-align: right;">
+                                                <h4 style="font-size: 30px;">£10.00</h4>
+                                                <span style="font-size: 12px; font-weight: bold;">Inc VAT</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="container">
+                                <div class="form-cards" style=" margin: 20px 15px; padding: 20px; ">
+                                    <h3>Payment Details</h3>
+                                    <div class="row mt-3">
+                                    <div class="col-md-5">
+                                            <label class="form-label">Payment Frequency<span class="red-star">*</span></label>
+                                             <select class="form-select" aria-label="Default select example" name="paymentFrequency" id="paymentFrequency">
+                                             <option selected disabled>Select</option>
+                                                <option value="Monthly">Monthly</option>
+                                                <option value="Quarterly">Quarterly</option>
+                                                <option value="Annually">Annually</option>
+                                             </select>
+                                        </div>
+                                        <div class=" col-md-5">
+                                            <label class="form-label">Payment Mode<span class="red-star">*</span></label>
+                                            <select class="form-select" aria-label="Default select example" id="paymentMode">
+                                            <option selected disabled>Select</option>
+                                            <option value="Credit Card">Credit Card</option>
+                                            <option value="Direct Debit">Direct Debit</option>
+                                            <option value="Cheque">Cheque</option>
+                                            <option value="Cash">Cash</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-3" id="creditCard" style="display:none">
+                                      <div class=" col-md-4">
+                                            <label class="form-label" id="beneficialLabel">Card Number:<span class="red-star">*</span></label>
+                                            <input name="beneficiary_name" type="text" class="form-control" id="beneficiaryName" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label" id="bankLabel">Card Type:<span class="red-star">*</span></label>
+                                             <select id="bankName" name="bank_name" class="form-control">
+                                                    <option value="">Select Card Type</option>
+                                                    <option value="Visa">Visa</option>
+                                                    <option value="MasterCard">MasterCard</option>
+                                                    <option value="American Express">American Express</option>
+                                                    <option value="Discover">Discover</option>
+                                                </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label" id="acnoLabel">Expiry Date<span class="red-star">*</span></label>
+                                            <input name="expire_date" type="date" class="form-control" id="expire_date"/>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label" id="sortcodeLabel">CVV:<span class="red-star">*</span></label>
+                                            <input name="sort_code" type="text" class="form-control" id="CVV"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-3" id="directDebit" style="display:none">
+                                      <div class=" col-md-4">
+                                            <label class="form-label" id="beneficialLabel">Name in the Bank:<span class="red-star">*</span></label>
+                                            <input name="beneficiary_name" type="text" class="form-control" id="beneficiaryName" />
+                                        </div>
+                                        <div class=" col-md-2">
+                                            <label class="form-label" id="bankLabel">Bank Name<span class="red-star">*</span></label>
+                                            <input name="bank_name" type="text" class="form-control" id="bankName"/>
+                                        </div>
+                                        <div class=" col-md-4">
+                                            <label class="form-label" id="acnoLabel">Ac. No.<span class="red-star">*</span></label>
+                                            <input name="ac_no" type="text" class="form-control" id="acNo"/>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label" id="sortcodeLabel">Sort Code<span class="red-star">*</span></label>
+                                            <input name="sort_code" type="text" class="form-control" id="sortCode"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label">Agent Name<span class="red-star">*</span></label>
+                                            <input name="agent_name" type="text" class="form-control" id="agentName"/>
+                                        </div>
+                                        <div class=" col-md-3">
+                                            <label class="form-label">Verifying Officer Name<span class="red-star">*</span></label>
+                                            <select name="verifying_officer_name" class="form-select" id="verifyingOfficer" aria-label="Default select example">
+                                            <option selected disabled>Select</option>
+                                                <option value="1">One</option>
+                                            </select>
+                                        </div>
+                                        <div class=" col-md-2">
+                                            <label class="form-label">Call Type<span class="red-star">*</span></label>
+                                            <select name="call_type" class="form-select" id="callType" aria-label="Default select example">
+                                            <option selected disabled>Select</option>
+                                                <option value="Auto Dialer">Auto Dialer</option>
+                                                <option value="Manually Dialed">Manually Dialed</option>
+                                            </select>
+                                        </div>
+                                        <div class=" col-md-2">
+                                            <label class="form-label">Lead Source<span class="red-star">*</span></label>
+                                            <select name="lead_source" class="form-select" id="leadSource" aria-label="Default select example">
+                                            <option selected disabled>Select</option>
+                                            <option value="Auto Dialer">Auto Dialer</option>
+                                            <option value="Manually Dialed">Manually Dialed</option>
+                                            </select>
+                                        </div>
+                                        <div class=" col-md-2">
+                                            <label class="form-label">Order Type</label>
+                                            <select name="others" class="form-select" aria-label="Default select example">
+                                            <option selected disabled>Select</option>
+                                                <option value="Fresh Sale">Fresh Sale</option>
+                                                <option value="Reprocessed Sale">Reprocessed Sale</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-3">
+                                        <div style="width: 100%;">
+                                            <label for="inputPassword5" class="form-label">Agent Comments<span class="red-star">*</span></label>
+                                            <textarea name="Agent-comments" rows="4" style="width: 100%;" id="agentComments"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-3">
+                                        <div style="width: 100%;">
+                                            <button type="submit"
+                                                style="width: 100%; padding: 4px 0px; color: white; background-color: #3A02FF; border-radius: 7px; cursor: pointer;">SUBMIT</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <button
+                                                style="width: 100%; padding: 4px 0px; border-radius: 7px; outline: none;  color: white; background-color: #6B6B6B; cursor: pointer;">RESET</button>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button
+                                                style="width: 100%; padding: 4px 0px; border-radius: 7px; outline: none; color: white; background-color: #FF0202; cursor: pointer;">CANCEL</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- core:js -->
+    <script src="{{ asset('public/js/select-sale-type.js') }}"></script>
+    <script src="{{ asset('public/js/salesFormValidation.js') }}"></script>
+    <script src="{{ asset('public/vendors/core/core.js') }}"></script>
+    <script src="{{ asset('public/vendors/flatpickr/flatpickr.min.js') }}"></script>
+    <script src="{{ asset('public/vendors/apexcharts/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('public/vendors/feather-icons/feather.min.js') }}"></script>
+    <script src="{{ asset('public/js/template.js') }}"></script>
+    <script src="{{ asset('public/js/dashboard-light.js') }}"></script>
+    <script src="{{ asset('public/js/salesFormFunction.js') }}"></script>
+    <!-- End custom js for this page -->
+
+    <script>
+        /*=============================  Calling Features Data   ==================================*/
+        document.addEventListener('DOMContentLoaded', () => {
+        const container = document.querySelector('.callingFeaturesContainer');
+
+        // Function to auto-populate cost, VAT, and Including VAT
+        function handleAutoPopulation(row) {
+            const selectElement = row.querySelector('select[name="callingFeatures[]"]');
+            const costInput = row.querySelector('input[name="callingFeaturesCost[]"]');
+            const vatInput = row.querySelector('input[name="callingFeaturesVAT[]"]');
+            const inclVATInput = row.querySelector('input[name="callingFeaturesIncludingVAT[]"]');
+
+            selectElement.addEventListener('change', (e) => {
+                const selectedOption = e.target.selectedOptions[0];
+                const cost = selectedOption.getAttribute('data-cost') || '';
+                const vat = selectedOption.getAttribute('data-vat') || '';
+                const inclVat = selectedOption.getAttribute('data-inclvat') || '';
+
+                // Populate the fields
+                costInput.value = cost;
+                vatInput.value = vat;
+                inclVATInput.value = inclVat;
+            });
+        }
+
+        // Attach auto-population to the first row
+        handleAutoPopulation(container);
+
+        // Handle adding a new row
+        const addMoreBtn = container.querySelector('.add-more-btn1');
+        addMoreBtn.addEventListener('click', () => {
+            const firstRow = container.querySelector('.row.mt-3');
+            const newRow = firstRow.cloneNode(true);
+
+            // Clear the values in cloned inputs
+            newRow.querySelectorAll('input').forEach(input => input.value = '');
+            newRow.querySelector('select').selectedIndex = 0;
+
+            // Append the new row before the button
+            container.insertBefore(newRow, addMoreBtn);
+
+            // Attach auto-population to the new row
+            handleAutoPopulation(newRow);
+
+            // Add remove button to the new row
+            const removeBtn = document.createElement('button');
+            removeBtn.classList.add('btn', 'btn-danger', 'mt-2', 'remove-btn');
+            removeBtn.type = 'button';
+            removeBtn.textContent = 'Remove';
+            newRow.appendChild(removeBtn);
+
+            // Handle row removal
+            removeBtn.addEventListener('click', () => {
+                container.removeChild(newRow);
+                });
+            });
+        });
+
+
+            /*=============================  Add Ons Data   ==================================*/
+            document.addEventListener('DOMContentLoaded', () => {
+            // Function to handle auto-population for a single row
+            function handleAddOnsPopulation(container) {
+                const selectElement = container.querySelector('select[name="add_ons[]"]');
+                const costInput = container.querySelector('input[name="addonscost[]"]');
+                const vatInput = container.querySelector('input[name="addonsvat[]"]');
+                const inclVATInput = container.querySelector('input[name="addonsincludingvat[]"]');
+
+                selectElement.addEventListener('change', (e) => {
+                    const selectedOption = e.target.selectedOptions[0];
+                    const cost = selectedOption.getAttribute('data-cost') || '';
+                    const vat = selectedOption.getAttribute('data-vat') || '';
+                    const inclVat = selectedOption.getAttribute('data-inclvat') || '';
+
+                    // Populate the fields
+                    costInput.value = cost;
+                    vatInput.value = vat;
+                    inclVATInput.value = inclVat;
+                });
+            }
+
+            // Initialize the first row
+            const addOnsContainer = document.querySelector('.addOnsContainer');
+            handleAddOnsPopulation(addOnsContainer);
+
+            // Handle dynamically added rows
+            const addMoreBtn = document.querySelector('.add-more-btn2');
+            addMoreBtn.addEventListener('click', () => {
+                const newRow = addOnsContainer.cloneNode(true);
+
+                // Clear the values in the cloned inputs
+                newRow.querySelectorAll('input').forEach(input => input.value = '');
+                newRow.querySelector('select').selectedIndex = 0;
+
+                //addOnsContainer.parentElement.appendChild(newRow);
+
+                // Reinitialize event listeners for the new row
+                handleAddOnsPopulation(newRow);
+            });
+        });
+
+        /*==============================  Hardware/Product_Services ===================================*/
+        document.addEventListener('DOMContentLoaded', () => {
+            // Function to handle auto-population for a single row
+            function handleOneOffPopulation(container) {
+                const selectElement = container.querySelector('select[name="product_services[]"]');
+                const costInput = container.querySelector('input[name="productservicecost[]"]');
+                const vatInput = container.querySelector('input[name="productservicevat[]"]');
+                const inclVATInput = container.querySelector('input[name="productserviceincludingvat[]"]');
+
+                selectElement.addEventListener('change', (e) => {
+                    const selectedOption = e.target.selectedOptions[0];
+                    const cost = selectedOption.getAttribute('data-cost') || '';
+                    const vat = selectedOption.getAttribute('data-vat') || '';
+                    const inclVat = selectedOption.getAttribute('data-inclvat') || '';
+
+                    // Populate the fields
+                    costInput.value = cost;
+                    vatInput.value = vat;
+                    inclVATInput.value = inclVat;
+                });
+            }
+
+            // Initialize the first row
+            const oneOffContainer = document.querySelector('.oneOffContainer');
+            handleOneOffPopulation(oneOffContainer);
+
+            // Handle dynamically added rows
+            const addMoreBtn = document.querySelector('.add-more-btn3');
+            addMoreBtn.addEventListener('click', () => {
+                const newRow = oneOffContainer.cloneNode(true);
+
+                // Clear the values in the cloned inputs
+                newRow.querySelectorAll('input').forEach(input => input.value = '');
+                newRow.querySelector('select').selectedIndex = 0;
+
+                //oneOffContainer.parentElement.appendChild(newRow);
+
+                // Reinitialize event listeners for the new row
+                handleOneOffPopulation(newRow);
+            });
+        });
+    </script>
+
+</body>
+
+</html>
+@else
+@php return redirect('/')->send(); @endphp
+@endif
