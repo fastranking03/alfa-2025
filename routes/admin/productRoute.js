@@ -2,13 +2,15 @@ import express from "express"
 import { disProduct,addProduct, editProduct, deleteImage, deleteSize,updateProduct} from "../../controllers/admin/productController.js";
 import { getAllCategory } from "../../services/admin/catService.js";
 import { upload } from "../../multer-config.js";
+import { disAllType } from "../../services/admin/typeService.js";
 
 const router = express.Router();
 
 router.get('/product-list',disProduct);
 router.get('/add-product', async (req,res) =>{
     const catData = await getAllCategory();
-    res.render('admin/add-product',{catData})
+    const typeData = await disAllType();
+    res.render('admin/add-product',{catData,typeData});
 })
 router.post('/add-product',upload.fields([
     { name: 'p_image', maxCount: 1 },

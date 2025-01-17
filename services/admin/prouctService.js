@@ -7,3 +7,4 @@ export const getAllProduct = async (req,res) =>{
         console.log(e)
     }
 }
+

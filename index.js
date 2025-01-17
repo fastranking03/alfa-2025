@@ -13,6 +13,7 @@ import cartRoute from "./routes/cartRoute.js";
 import paypalRoute from "./routes/paypalRoute.js";
 import categoryRoute from "./routes/admin/categoryRoute.js";
 import productRoute from "./routes/admin/productRoute.js";
+import typeRoute from "./routes/admin/typeRoute.js";
 
 const app = express();
 app.use(cors())
@@ -49,15 +50,16 @@ app.use('/m-t',(req,res) =>{
 app.use('/', commonRoute);
 app.use('/book-appointment', bookAppointment);
 app.use('/services', services);
-app.use('/',loginRoute) 
-app.use('/', cartRoute)
-app.use('/', paypalRoute)
+app.use('/',loginRoute) ;
+app.use('/', cartRoute);
+app.use('/', paypalRoute);
 
  
 // Admin Routes
 app.use('/admin/', adminRoute);
 app.use('/admin/',categoryRoute);
-app.use('/admin/', productRoute)
+app.use('/admin/', productRoute);
+app.use('/admin/', typeRoute);
 
 const PORT = 8082
 

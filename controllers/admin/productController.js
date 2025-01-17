@@ -2,6 +2,7 @@ import connect from "../../db/connect.js";
 import { getAllCategory } from "../../services/admin/catService.js"
 import cloudinary from "cloudinary";
 import fs from 'fs';
+
 export const disProduct = async (req, res) => {
     try {
         const catData = await getAllCategory();
@@ -28,7 +29,7 @@ export const disProduct = async (req, res) => {
 export const addProduct = async (req, res) => {
     try {
         const { cat_id, p_name, p_price, discount, p_main_price, p_url, p_title, p_desc, p_key_features, tags, brand, sku, colour, type, new_arrival, best_seller, size, quantity } = req.body;
-
+        
         const mainImage = req.files['p_image'][0]; // Single file
         const additionalImages = req.files['p_images']; // Array of files
 
