@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 06, 2025 at 07:00 PM
+-- Generation Time: Jan 17, 2025 at 06:50 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -233,6 +233,27 @@ INSERT INTO `engines` (`id`, `manufacturer`, `c_modal`, `c_gen`, `engine_name`, 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `inventory_type`
+--
+
+CREATE TABLE `inventory_type` (
+  `id` int(11) NOT NULL,
+  `i_type` varchar(60) NOT NULL,
+  `status` varchar(30) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `inventory_type`
+--
+
+INSERT INTO `inventory_type` (`id`, `i_type`, `status`, `created_at`) VALUES
+(1, 'Top', 'active', '2025-01-15 17:22:32'),
+(2, 'Bottom', 'active', '2025-01-15 17:22:36');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `manufacturer`
 --
 
@@ -250,6 +271,20 @@ CREATE TABLE `manufacturer` (
 INSERT INTO `manufacturer` (`id`, `name`, `status`, `created_at`) VALUES
 (1, 'BMW', 1, '2024-12-21 19:33:59'),
 (2, 'Audi', 1, '2024-12-21 19:34:56');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `new_size`
+--
+
+CREATE TABLE `new_size` (
+  `id` int(11) NOT NULL,
+  `size_name` varchar(30) NOT NULL,
+  `s_quantity` int(11) NOT NULL,
+  `status` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -480,6 +515,21 @@ INSERT INTO `size` (`id`, `product_id`, `size`, `quantity`, `status`, `created_a
 (35, 12, '30', 5, 0, '2024-12-27 16:50:36'),
 (36, 12, '32', 5, 0, '2024-12-27 16:50:36');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sizes_fits`
+--
+
+CREATE TABLE `sizes_fits` (
+  `id` int(11) NOT NULL,
+  `size_id` int(11) NOT NULL,
+  `fit_name` varchar(70) NOT NULL,
+  `f_quantity` int(11) NOT NULL,
+  `status` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Indexes for dumped tables
 --
@@ -533,9 +583,21 @@ ALTER TABLE `engines`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `inventory_type`
+--
+ALTER TABLE `inventory_type`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `manufacturer`
 --
 ALTER TABLE `manufacturer`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `new_size`
+--
+ALTER TABLE `new_size`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -584,6 +646,12 @@ ALTER TABLE `p_size`
 -- Indexes for table `size`
 --
 ALTER TABLE `size`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `sizes_fits`
+--
+ALTER TABLE `sizes_fits`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -639,10 +707,22 @@ ALTER TABLE `engines`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
+-- AUTO_INCREMENT for table `inventory_type`
+--
+ALTER TABLE `inventory_type`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `manufacturer`
 --
 ALTER TABLE `manufacturer`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `new_size`
+--
+ALTER TABLE `new_size`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -691,6 +771,12 @@ ALTER TABLE `p_size`
 --
 ALTER TABLE `size`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+
+--
+-- AUTO_INCREMENT for table `sizes_fits`
+--
+ALTER TABLE `sizes_fits`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
